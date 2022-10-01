@@ -1,33 +1,61 @@
+import { format, formatDistanceToNow } from 'date-fns';
+import ptBr from 'date-fns/locale/pt-BR';
+import { useState } from 'react';
 import { Avatar } from './Avatar';
 import { Comment } from './Comment';
 import styles from './Post.module.css';
 
-export function Post(){
+export function Post({author, publishedAt, content}){
+    const [comments, setComments] = useState([
+        'Muito bom esse post',
+    ])
+
+    const publishedDateFormatted = format(publishedAt, "dd 'de' LLLL 'de' yyyy 'às' HH:mm'h'", {
+        locale: ptBr,
+    })
+
+    const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBr,
+        addSuffix: true
+    })
+
+    
+
+    function handleCreateNewComment(){
+        event.preventDefault()
+
+        const newCommentText = event.target.comment.value
+
+        setComments([...comments, newCommentText]);
+    } 
+
     return (
         <article className={styles.post}>
             <header>
                 <div className={styles.author}>
-                    <Avatar src="https://github.com/fn-felipe.png"/>
+                    <Avatar src={author.avatarUrl}/>
                     <div className={styles.authorInfo}>
-                        <strong>Felipe de Assis</strong>
-                        <span>Web Developer</span>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
                     </div>
                 </div>
 
-                <time title='11 de maio de 2022' dateTime='2022-05-11 08:13:30'>Publicado há 1h</time>
+                <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+                    {publishedDateRelativeToNow}
+                </time>
             </header>
             
             <div className={styles.content}>
-                <p>Fala galere</p>
-                <p>Acabei de postar meu mais novo sucesso em desenvolvimento. É minha página pessoal. Lá vocês poderão são os dias de trabalho, meu contato e ficar por dentro de tudo o que eu faço no dia a dia.</p>
-                <p><a href="">felipe.developer/webdeveloper</a></p>
-                <p>
-                    <a href="">#webdeveloper</a>{' '}
-                    <a href="">#programaçãoPorAmor</a>
-                </p>
+                {content.map(line => {
+                    if(line.type === 'paragreph'){
+                        return <p>{line.content}</p>
+                    } else if (line.type === 'link'){
+                        return <p><a href='#'>{line.content}</a></p>
+                    }
+                })}
             </div>
             
-            <form className={styles.commentForm}>
+            <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
                 <textarea placeholder='Deixe um comentário'/>
                 <footer>
@@ -36,9 +64,9 @@ export function Post(){
             </form>
 
             <div className={styles.commentList}>
-                <Comment/>
-                <Comment/>
-                <Comment/>
+                {comments.map(comment => {
+                    return <Comment content={comment}/>
+                })}
             </div>
 
         </article>
