@@ -7,7 +7,7 @@ import styles from './Post.module.css';
 
 export function Post({author, publishedAt, content}){
     const [comments, setComments] = useState([
-        'Muito bom esse post',
+       'Parabéns Felipe, muito bom seu site!'
     ])
 
     const publishedDateFormatted = format(publishedAt, "dd 'de' LLLL 'de' yyyy 'às' HH:mm'h'", {
@@ -57,7 +57,11 @@ export function Post({author, publishedAt, content}){
             
             <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
-                <textarea placeholder='Deixe um comentário'/>
+
+                <textarea 
+                    placeholder='Deixe um comentário'
+                />
+
                 <footer>
                     <button type='submit'>Publicar</button>
                 </footer>
