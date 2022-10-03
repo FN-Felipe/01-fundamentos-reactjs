@@ -59,6 +59,7 @@ export function Post({author, publishedAt, content}){
                 <strong>Deixe seu feedback</strong>
 
                 <textarea 
+                    name='comment'
                     placeholder='Deixe um comentário'
                 />
 
